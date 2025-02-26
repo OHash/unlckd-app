@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="unlkd - a simple activity suggestion tool for overcoming executive dysfunction, anxiety, and procrastination. Find your next small win with just one tap.">
+    <meta name="keywords" content="executive dysfunction, procrastination, mental health, self-care, productivity, anxiety, adhd, activity suggestions">
+    <title>unlkd | simple activity suggestions for when you're stuck</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f0f0f8;
+            --primary: #c8a2c8;
+            --secondary: #a2c8c8;
+            --accent: #c8c8a2;
+            --text: #505060;
+            --light-text: #808090;
+            --hover-color: #e6d7e6;
+            --simple-color: #a2c8a2;
+            --medium-color: #c8a2a2;
+            --complex-color: #a2a2c8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'VT323', monospace;
+            background-color: var(--bg-color);
+            color: var(--text);
+            text-transform: lowercase;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            letter-spacing: 0.5px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        header {
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 400;
+            letter-spacing: 1px;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: var(--light-text);
+            font-size: 0.9rem;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .main-button {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            margin: 20px auto;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .main-button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 30px auto;
+        }
+
+        .category-button {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .category-button:hover {
+            background: var(--hover-color);
+        }
+
+        .category-button.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .complexity {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px auto;
+        }
+
+        .toggle {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .toggle-track {
+            width: 36px;
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            position: relative;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-thumb {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .toggle.active .toggle-track {
+            background-color: var(--accent);
+        }
+
+        .toggle.active:nth-child(1) .toggle-track {
+            background-color: var(--simple-color);
+        }
+
+        .toggle.active:nth-child(2) .toggle-track {
+            background-color: var(--medium-color);
+        }
+
+        .toggle.active:nth-child(3) .toggle-track {
+            background-color: var(--complex-color);
+        }
+
+        .toggle.active .toggle-thumb {
+            transform: translateX(16px);
+        }
+
+        .toggle-label {
+            font-size: 0.75rem;
+            color: var(--light-text);
+        }
+
+        .activity-box {
+            background-color: #f8f8f8;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 30px auto 10px;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .activity-content {
+            font-size: 1.2rem;
+            color: var(--text);
+            text-align: center;
+        }
+
+        .activity-category {
+            display: inline-block;
+            font-size: 0.7rem;
+            background-color: var(--primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+
+        footer {
+            margin-top: 20px;
+            font-size: 0.7rem;
+            color: var(--light-text);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>unlkd</h1>
+            <p>tap to find your next small win</p>
+            <div class="intro-text">
+                <p>stuck? unlkd gives you quick ideas to get moving again.</p>
+                <p>from tiny acts of self-care to creative sparks, find your path forward. gentle for tough days, ambitious when you're ready. your next small win is just a tap away.</p>
+            </div>
+        </header>
+
+        <button class="main-button" id="unlkdButton">unlkd</button>
+
+        <div class="categories">
+            <button class="category-button" data-category="self-care">self-care</button>
+            <button class="category-button" data-category="fun">fun</button>
+            <button class="category-button" data-category="learning">learning</button>
+            <button class="category-button" data-category="physical">physical</button>
+            <button class="category-button" data-category="chores">chores</button>
+            <button class="category-button" data-category="social">social</button>
+            <button class="category-button" data-category="creative">creative</button>
+            <button class="category-button" data-category="mindfulness">mindfulness</button>
+        </div>
+
+        <div class="complexity">
+            <div class="toggle active" data-complexity="simple">
+                <div class="toggle-track">
+                    <div class="toggle-thumb"></div>
+                </div>
+                <div class="toggle-label">simple</div>
+            </div>
+            <div class="toggle active" data-complexity="medium">
+                <div class="toggle-track">
+                    <div class="toggle-thumb"></div>
+                </div>
+                <div class="toggle-label">medium</div>
+            </div>
+            <div class="toggle active" data-complexity="complex">
+                <div class="toggle-track">
+                    <div class="toggle-thumb"></div>
+                </div>
+                <div class="toggle-label">complex</div>
+            </div>
+        </div>
+
+        <div class="activity-box">
+            <div id="activityContent" class="activity-content">
+                tap unlkd to get started
+            </div>
+            <div id="activityCategory" class="activity-category" style="display: none;"></div>
+        </div>
+
+        <footer>
+            <p>a tiny tool for when you're stuck</p>
+            <div class="outro-text">
+                <p>unlkd is all about small wins. no pressure, no complicated systems, no login required. just tap when you need a gentle nudge in any direction. remember, getting unstuck doesn't have to be complicated - sometimes all you need is one tiny action to create momentum.</p>
+                <p>bookmark this page for whenever you're feeling frozen, overwhelmed, or just need a friendly suggestion. there's no right or wrong way to use unlkd - it's here whenever you need it.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Activity database with relatability weights (1-5)
+        const activities = [
+            // SELF-CARE
+            { text: "drink a full glass of water right now", category: "self-care", complexity: "simple", relatabilityWeight: 5 },
+            { text: "take 5 deep breaths with your eyes closed", category: "self-care", complexity: "simple", relatabilityWeight: 5 },
+            { text: "wash your face with cold water", category: "self-care", complexity: "simple", relatabilityWeight: 4 },
+            { text: "brush your teeth and use mouthwash", category: "self-care", complexity: "medium", relatabilityWeight: 4 },
+            { text: "change into fresh clothes", category: "self-care", complexity: "medium", relatabilityWeight: 4 },
+            { text: "make a cup of herbal tea and drink it slowly", category: "self-care", complexity: "medium", relatabilityWeight: 3 },
+            { text: "take a 15-minute shower with your favorite products", category: "self-care", complexity: "complex", relatabilityWeight: 4 },
+            { text: "prepare and eat a balanced meal", category: "self-care", complexity: "complex", relatabilityWeight: 3 },
+            { text: "change your bedsheets and pillowcases", category: "self-care", complexity: "complex", relatabilityWeight: 3 },
+            { text: "write down 3 things you like about yourself", category: "self-care", complexity: "complex", relatabilityWeight: 3 },
+            
+            // FUN
+            { text: "watch a funny 5-minute video on youtube", category: "fun", complexity: "simple", relatabilityWeight: 5 },
+            { text: "dance to one song you like", category: "fun", complexity: "simple", relatabilityWeight: 4 },
+            { text: "look at cute animal pictures for 2 minutes", category: "fun", complexity: "simple", relatabilityWeight: 4 },
+            { text: "watch one episode of a comedy show", category: "fun", complexity: "medium", relatabilityWeight: 4 },
+            { text: "play a card game (even solitaire counts)", category: "fun", complexity: "medium", relatabilityWeight: 3 },
+            { text: "put on music and have a 10-minute dance party", category: "fun", complexity: "medium", relatabilityWeight: 3 },
+            { text: "plan a movie night with snacks and a film you've been wanting to see", category: "fun", complexity: "complex", relatabilityWeight: 4 },
+            { text: "find a new podcast and listen to the first episode", category: "fun", complexity: "complex", relatabilityWeight: 3 },
+            { text: "find a puzzle or crossword and work on it for 20 minutes", category: "fun", complexity: "complex", relatabilityWeight: 3 },
+            { text: "create a bucket list of 10 fun things you want to do this year", category: "fun", complexity: "complex", relatabilityWeight: 3 },
+            
+            // LEARNING
+            { text: "look up the meaning of a word you've heard but don't know", category: "learning", complexity: "simple", relatabilityWeight: 4 },
+            { text: "read one wikipedia article on a random topic", category: "learning", complexity: "simple", relatabilityWeight: 3 },
+            { text: "learn one new keyboard shortcut", category: "learning", complexity: "simple", relatabilityWeight: 3 },
+            { text: "watch a 15-minute documentary on any topic", category: "learning", complexity: "medium", relatabilityWeight: 3 },
+            { text: "read an article about a scientific discovery", category: "learning", complexity: "medium", relatabilityWeight: 3 },
+            { text: "read 10 pages of a non-fiction book", category: "learning", complexity: "medium", relatabilityWeight: 3 },
+            { text: "take a 30-minute online course on a subject you're interested in", category: "learning", complexity: "complex", relatabilityWeight: 3 },
+            { text: "find a tutorial and learn to fix something in your home", category: "learning", complexity: "complex", relatabilityWeight: 3 },
+            { text: "research a topic and take detailed notes for 25 minutes", category: "learning", complexity: "complex", relatabilityWeight: 2 },
+            { text: "find and practice a new recipe", category: "learning", complexity: "complex", relatabilityWeight: 3 },
+            
+            // PHYSICAL
+            { text: "do 10 jumping jacks right where you are", category: "physical", complexity: "simple", relatabilityWeight: 4 },
+            { text: "stretch your arms and legs for 1 minute", category: "physical", complexity: "simple", relatabilityWeight: 5 },
+            { text: "do 10 squats by your desk or couch", category: "physical", complexity: "simple", relatabilityWeight: 4 },
+            { text: "go for a 10-minute walk outside", category: "physical", complexity: "medium", relatabilityWeight: 4 },
+            { text: "do a 5-minute stretching routine", category: "physical", complexity: "medium", relatabilityWeight: 3 },
+            { text: "do a quick 10-minute home workout", category: "physical", complexity: "medium", relatabilityWeight: 3 },
+            { text: "complete a 20-minute workout video", category: "physical", complexity: "complex", relatabilityWeight: 3 },
+            { text: "go for a 30-minute walk, jog, or bike ride", category: "physical", complexity: "complex", relatabilityWeight: 3 },
+            { text: "do a full 30-minute yoga session", category: "physical", complexity: "complex", relatabilityWeight: 2 },
+            { text: "go through a full stretching routine for your whole body", category: "physical", complexity: "complex", relatabilityWeight: 3 },
+            
+            // CHORES
+            { text: "clear one small surface of clutter", category: "chores", complexity: "simple", relatabilityWeight: 5 },
+            { text: "put 5 items back where they belong", category: "chores", complexity: "simple", relatabilityWeight: 5 },
+            { text: "wipe down one counter or surface", category: "chores", complexity: "simple", relatabilityWeight: 4 },
+            { text: "do one load of laundry", category: "chores", complexity: "medium", relatabilityWeight: 4 },
+            { text: "clean your bathroom sink", category: "chores", complexity: "medium", relatabilityWeight: 3 },
+            { text: "wash the dishes in your sink", category: "chores", complexity: "medium", relatabilityWeight: 4 },
+            { text: "clean your entire bathroom", category: "chores", complexity: "complex", relatabilityWeight: 3 },
+            { text: "vacuum and mop your floors", category: "chores", complexity: "complex", relatabilityWeight: 3 },
+            { text: "organize your closet and donate unused items", category: "chores", complexity: "complex", relatabilityWeight: 2 },
+            { text: "wash your bedding and remake your bed", category: "chores", complexity: "complex", relatabilityWeight: 3 },
+            
+            // SOCIAL
+            { text: "text a friend just to say hi", category: "social", complexity: "simple", relatabilityWeight: 5 },
+            { text: "leave a nice comment on someone's social media post", category: "social", complexity: "simple", relatabilityWeight: 4 },
+            { text: "reply to a message you've been putting off", category: "social", complexity: "simple", relatabilityWeight: 4 },
+            { text: "call a friend or family member for a quick chat", category: "social", complexity: "medium", relatabilityWeight: 4 },
+            { text: "write a thoughtful email to someone you appreciate", category: "social", complexity: "medium", relatabilityWeight: 3 },
+            { text: "send someone a small digital gift (e-card, playlist, etc)", category: "social", complexity: "medium", relatabilityWeight: 3 },
+            { text: "plan a coffee date or meal with a friend", category: "social", complexity: "complex", relatabilityWeight: 3 },
+            { text: "write a handwritten letter to someone special", category: "social", complexity: "complex", relatabilityWeight: 2 },
+            { text: "organize a small gathering or virtual hangout", category: "social", complexity: "complex", relatabilityWeight: 2 },
+            { text: "reach out to someone you've lost touch with", category: "social", complexity: "complex", relatabilityWeight: 3 },
+            
+            // CREATIVE
+            { text: "doodle for 5 minutes on any paper you have", category: "creative", complexity: "simple", relatabilityWeight: 4 },
+            { text: "write down one creative idea you've had recently", category: "creative", complexity: "simple", relatabilityWeight: 4 },
+            { text: "take 3 interesting photos of ordinary objects", category: "creative", complexity: "simple", relatabilityWeight: 3 },
+            { text: "create a simple collage from magazines or printed materials", category: "creative", complexity: "medium", relatabilityWeight: 3 },
+            { text: "write a short poem or haiku about how you feel", category: "creative", complexity: "medium", relatabilityWeight: 3 },
+            { text: "sketch or paint something you can see right now", category: "creative", complexity: "medium", relatabilityWeight: 3 },
+            { text: "start a creative project you've been thinking about", category: "creative", complexity: "complex", relatabilityWeight: 3 },
+            { text: "create a vision board for your goals", category: "creative", complexity: "complex", relatabilityWeight: 3 },
+            { text: "write a short story or start a journal entry", category: "creative", complexity: "complex", relatabilityWeight: 3 },
+            { text: "design or redesign a space in your home", category: "creative", complexity: "complex", relatabilityWeight: 2 },
+            
+            // MINDFULNESS
+            { text: "focus on your breathing for 1 minute", category: "mindfulness", complexity: "simple", relatabilityWeight: 5 },
+            { text: "look out the window and name 5 things you can see", category: "mindfulness", complexity: "simple", relatabilityWeight: 4 },
+            { text: "silently name 3 things you're grateful for", category: "mindfulness", complexity: "simple", relatabilityWeight: 4 },
+            { text: "do a 5-minute guided meditation", category: "mindfulness", complexity: "medium", relatabilityWeight: 3 },
+            { text: "write down your current thoughts and feelings", category: "mindfulness", complexity: "medium", relatabilityWeight: 3 },
+            { text: "practice the 5-4-3-2-1 grounding technique", category: "mindfulness", complexity: "medium", relatabilityWeight: 3 },
+            { text: "complete a 15-minute meditation session", category: "mindfulness", complexity: "complex", relatabilityWeight: 2 },
+            { text: "create a mindfulness corner in your home", category: "mindfulness", complexity: "complex", relatabilityWeight: 2 },
+            { text: "practice a full body scan meditation for 20 minutes", category: "mindfulness", complexity: "complex", relatabilityWeight: 2 },
+            { text: "write a reflection on your growth over the past year", category: "mindfulness", complexity: "complex", relatabilityWeight: 3 }
+        ];
+
+        // DOM elements
+        const unlkdButton = document.getElementById('unlkdButton');
+        const categoryButtons = document.querySelectorAll('.category-button');
+        const complexityToggles = document.querySelectorAll('.toggle');
+        const activityContent = document.getElementById('activityContent');
+        const activityCategory = document.getElementById('activityCategory');
+
+        // App state
+        let selectedCategory = null;
+        let activeComplexities = ['simple', 'medium', 'complex']; // All active by default
+        let lastActivity = null;
+        
+        // Get random activity based on selected category and complexities
+        function getRandomActivity() {
+            // Filter activities based on selected category and complexities
+            let filteredActivities = activities.filter(activity => {
+                const matchesCategory = selectedCategory ? activity.category === selectedCategory : true;
+                const matchesComplexity = activeComplexities.includes(activity.complexity);
+                return matchesCategory && matchesComplexity;
+            });
+            
+            // If no activities match the criteria
+            if (filteredActivities.length === 0) {
+                return {
+                    text: "no matching activities found. try changing your filters.",
+                    category: "none",
+                    complexity: "simple"
+                };
+            }
+            
+            // Weighted random selection based on relatability
+            const totalWeight = filteredActivities.reduce((sum, activity) => sum + activity.relatabilityWeight, 0);
+            let random = Math.random() * totalWeight;
+            
+            for (const activity of filteredActivities) {
+                random -= activity.relatabilityWeight;
+                if (random <= 0) {
+                    // Ensure we don't show the same activity twice in a row
+                    if (lastActivity && lastActivity.text === activity.text && filteredActivities.length > 1) {
+                        return getRandomActivity(); // Try again
+                    }
+                    
+                    lastActivity = activity;
+                    return activity;
+                }
+            }
+            
+            // Fallback (should rarely happen)
+            return filteredActivities[Math.floor(Math.random() * filteredActivities.length)];
+        }
+        
+        // Display a random activity
+        function showRandomActivity() {
+            const activity = getRandomActivity();
+            
+            activityContent.textContent = activity.text;
+            
+            // Show category if it exists and isn't 'none'
+            if (activity.category && activity.category !== 'none') {
+                activityCategory.textContent = activity.category;
+                activityCategory.style.display = 'inline-block';
+            } else {
+                activityCategory.style.display = 'none';
+            }
+        }
+        
+        // Event handler for the main button
+        unlkdButton.addEventListener('click', showRandomActivity);
+        
+        // Event handlers for category buttons
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const category = button.dataset.category;
+                
+                // If this category is already selected, deselect it
+                if (selectedCategory === category) {
+                    selectedCategory = null;
+                    button.classList.remove('active');
+                } else {
+                    // Deselect previous category button if any
+                    document.querySelectorAll('.category-button.active').forEach(activeButton => {
+                        activeButton.classList.remove('active');
+                    });
+                    
+                    // Select this category
+                    selectedCategory = category;
+                    button.classList.add('active');
+                }
+            });
+        });
+        
+        // Event handlers for complexity toggles
+        complexityToggles.forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const complexity = toggle.dataset.complexity;
+                
+                // Toggle active state
+                toggle.classList.toggle('active');
+                
+                if (toggle.classList.contains('active')) {
+                    // Add complexity if not already included
+                    if (!activeComplexities.includes(complexity)) {
+                        activeComplexities.push(complexity);
+                    }
+                } else {
+                    // Remove complexity
+                    activeComplexities = activeComplexities.filter(c => c !== complexity);
+                    
+                    // Ensure at least one complexity is active
+                    if (activeComplexities.length === 0) {
+                        toggle.classList.add('active');
+                        activeComplexities.push(complexity);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
