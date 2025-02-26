@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unlckd - Break Free from Decision Paralysis</title>
+    <style>
+        :root {
+            --primary: #4e54c8;
+            --primary-dark: #363795;
+            --accent: #ff6b6b;
+            --light: #f9f9f9;
+            --dark: #333;
+            --medium: #888;
+            --success: #28a745;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--medium);
+            margin-bottom: 20px;
+        }
+        
+        .complexity-controls {
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .complexity-controls h2 {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .toggle-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .toggle {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--success);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        .category-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            background-color: white;
+            color: var(--dark);
+            border: none;
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-accent {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .btn-large {
+            grid-column: 1 / -1;
+            padding: 15px;
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+        
+        .result-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .activity-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .activity-description {
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+        
+        .activity-complexity {
+            font-size: 0.9rem;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background-color: var(--light);
+            color: var(--medium);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--medium);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 480px) {
+            .category-buttons {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Unlckd</h1>
+        <p class="tagline">Break free from decision paralysis and get unstuck</p>
+    </header>
+    
+    <div class="complexity-controls">
+        <h2>Activity Complexity</h2>
+        <div class="toggle-container">
+            <span>Simple</span>
+            <label class="toggle">
+                <input type="checkbox" id="simple-toggle" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="toggle-container">
+            <span>Medium</span>
+            <label class="toggle">
+                <input type="checkbox" id="medium-toggle" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="toggle-container">
+            <span>Complex</span>
+            <label class="toggle">
+                <input type="checkbox" id="complex-toggle" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+    
+    <div class="category-buttons">
+        <button class="btn" data-category="self-care">Self-Care</button>
+        <button class="btn" data-category="chores">Chores</button>
+        <button class="btn" data-category="fun">Fun</button>
+        <button class="btn" data-category="social">Social</button>
+        <button class="btn" data-category="learning">Learning</button>
+        <button class="btn" data-category="creative">Creative</button>
+        <button class="btn" data-category="physical">Physical</button>
+        <button class="btn" data-category="mindfulness">Mindfulness</button>
+        <button class="btn btn-primary btn-large" id="random-btn">Get Random Activity</button>
+    </div>
+    
+    <div class="result-container">
+        <p>Click a button above to get an activity suggestion</p>
+    </div>
+    
+    <footer>
+        <p>Unlckd - Helping people with executive dysfunction get unstuck</p>
+    </footer>
+
+    <script>
+        // Activity database
+        const activities = {
+            "self-care": [
+                {
+                    title: "Drink a glass of water",
+                    description: "Stay hydrated! Fill a glass with water and drink it.",
+                    complexity: "simple"
+                },
+                {
+                    title: "Take a shower",
+                    description: "Freshen up with a quick shower.",
+                    complexity: "medium"
+                },
+                {
+                    title: "Self-care routine",
+                    description: "Complete your full skincare and hygiene routine.",
+                    complexity: "complex"
+                },
+                {
+                    title: "Brush your teeth",
+                    description: "Take 2 minutes to brush your teeth thoroughly.",
+                    complexity: "simple"
+                },
+                {
+                    title: "Change into fresh clothes",
+                    description: "Put on a clean set of clothes, even if they're just comfortable ones.",
+                    complexity: "medium"
+                }
+            ],
+            "chores": [
+                {
+                    title: "Make your bed",
+                    description: "Straighten your sheets and blankets.",
+                    complexity: "simple"
+                },
+                {
+                    title: "Do the dishes",
+                    description: "Wash any dirty dishes in the sink or load the dishwasher.",
+                    complexity: "medium"
+                },
+                {
+                    title: "Deep clean a room",
+                    description: "Choose one room and clean it thoroughly.",
+                    complexity: "complex"
+                },
+                {
+                    title: "Clear one surface",
+                    description: "Pick one tabletop, counter, or desk and clear it of clutter.",
+                    complexity: "simple"
+                },
+                {
+                    title: "Take out the trash",
+                    description: "Gather and take out the garbage to the bin.",
+                    complexity: "medium"
+                }
+            ],
+            "fun": [
+                {
+                    title: "Watch a short video",
+                    description: "Find a 5-10 minute video on something that interests you.",
+                    complexity: "simple"
+                },
+                {
+                    title: "Play a game for 30 minutes",
+                    description: "Choose a video game, board game, or mobile game and play for half an hour.",
+                    complexity: "medium"
+                },
+                {
+                    title: "Movie night",
+                    description: "Set up a movie night with snacks and a film you've been wanting to watch.",
+                    complexity: "complex"
+                },
+                {
+                    title: "Listen to a favorite song",
+                    description: "Play one of your favorite songs and just enjoy it.",
+                    complexity: "simple"
+                },
+                {
+                    title: "Try a new restaurant",
+                    description: "Go to a restaurant you've never been to before.",
+                    complexity: "complex"
+                }
+            ],
+            "social": [
+                {
+                    title: "Send a text to a friend",
+                    description: "Send a quick message to check in with someone you care about.",
+                    complexity: "simple"
+                },
+                {
+                    title: "Call a family member",
+                    description: "Spend 15 minutes on the phone with a relative.",
+                    complexity: "medium"
+                },
+                {
+                    title: "Host a small gathering",
+                    description: "Invite 2-3 friends over for a simple hangout.",
+                    complexity: "complex"
+                },
+                {
+                    title: "Reply to one message",
+                    description: "Choose one unanswered message and respond to it.",
+                    complexity: "simple"
+                },
+                {
+                    title: "Coffee date",
+                    description: "Meet a friend for coffee and conversation.",
+                    complexity: "medium"
+                }
+            ],
+            "learning": [
+                {
+                    title: "Read one article",
+                    description: "Find and read an article on a topic that interests you.",
+                    complexity: "simple"
+                },
+                {
+                    title: "Watch an educational video",
+                    description: "Find a tutorial or informational video on something you want to learn.",
+                    complexity: "medium"
+                },
+                {
+                    title: "Take an online course lesson",
+                    description: "Complete one lesson of an online course you're enrolled in.",
+                    complexity: "complex"
+                },
+                {
+                    title: "Learn one new word",
+                    description: "Look up a new word, its meaning, and try using it in a sentence.",
+                    complexity: "simple"
+                },
+                {
+                    title: "Practice a language",
+                    description: "Spend 20 minutes practicing a language you're learning.",
+                    complexity: "medium"
+                }
+            ],
+            "creative": [
+                {
+                    title: "Doodle for 5 minutes",
+                    description: "Grab a pen and paper and draw whatever comes to mind.",
+                    complexity: "simple"
+                },
+                {
+                    title: "Write in a journal",
+                    description: "Spend 15 minutes writing about your thoughts or experiences.",
+                    complexity: "medium"
+                },
+                {
+                    title: "Start a creative project",
+                    description: "Begin a new art project, craft, or creative writing piece.",
+                    complexity: "complex"
+                },
+                {
+                    title: "Take 3 photos",
+                    description: "Find three interesting things to photograph around you.",
+                    complexity: "simple"
+                },
+                {
+                    title: "Rearrange a small space",
+                    description: "Redesign or rearrange a shelf, corner, or small area of your home.",
+                    complexity: "medium"
+                }
+            ],
+            "physical": [
+                {
+                    title: "Stretch for 2 minutes",
+                    description: "Do some simple stretches to get your body moving.",
+                    complexity: "simple"
+                },
+                {
+                    title: "Go for a 15-minute walk",
+                    description: "Take a short walk around your neighborhood or a nearby park.",
+                    complexity: "medium"
+                },
+                {
+                    title: "Complete a full workout",
+                    description: "Do a 30+ minute workout session of your choice.",
+                    complexity: "complex"
+                },
+                {
+                    title: "10 jumping jacks",
+                    description: "Stand up and do 10 jumping jacks to get your blood flowing.",
+                    complexity: "simple"
+                },
+                {
+                    title: "Dance to three songs",
+                    description: "Put on some music and dance freely for three songs.",
+                    complexity: "medium"
+                }
+            ],
+            "mindfulness": [
+                {
+                    title: "Take 5 deep breaths",
+                    description: "Pause and take five slow, deep breaths.",
+                    complexity: "simple"
+                },
+                {
+                    title: "10-minute meditation",
+                    description: "Do a short guided meditation or sit quietly for 10 minutes.",
+                    complexity: "medium"
+                },
+                {
+                    title: "Practice yoga",
+                    description: "Complete a yoga session focusing on mindfulness and breathing.",
+                    complexity: "complex"
+                },
+                {
+                    title: "List 3 things you're grateful for",
+                    description: "Take a moment to write down or think about three things you appreciate.",
+                    complexity: "simple"
+                },
+                {
+                    title: "Body scan meditation",
+                    description: "Spend 15 minutes doing a progressive body scan meditation.",
+                    complexity: "medium"
+                }
+            ]
+        };
+        
+        // DOM elements
+        const resultContainer = document.querySelector('.result-container');
+        const randomBtn = document.getElementById('random-btn');
+        const categoryButtons = document.querySelectorAll('.btn[data-category]');
+        const simpleToggle = document.getElementById('simple-toggle');
+        const mediumToggle = document.getElementById('medium-toggle');
+        const complexToggle = document.getElementById('complex-toggle');
+        
+        // Display an activity in the result container
+        function displayActivity(activity) {
+            resultContainer.innerHTML = `
+                <h3 class="activity-title">${activity.title}</h3>
+                <p class="activity-description">${activity.description}</p>
+                <span class="activity-complexity">Complexity: ${activity.complexity}</span>
+            `;
+        }
+        
+        // Get a random activity based on selected category and complexity
+        function getRandomActivity(category = null) {
+            // Get selected complexity levels
+            const selectedComplexity = {
+                simple: simpleToggle.checked,
+                medium: mediumToggle.checked,
+                complex: complexToggle.checked
+            };
+            
+            // If no complexity is selected, show message
+            if (!selectedComplexity.simple && !selectedComplexity.medium && !selectedComplexity.complex) {
+                resultContainer.innerHTML = '<p>Please select at least one complexity level</p>';
+                return;
+            }
+            
+            // Get activities from all categories or specific category
+            let eligibleActivities = [];
+            
+            if (category) {
+                eligibleActivities = activities[category].filter(activity => 
+                    selectedComplexity[activity.complexity]);
+            } else {
+                Object.values(activities).forEach(categoryActivities => {
+                    eligibleActivities = eligibleActivities.concat(
+                        categoryActivities.filter(activity => 
+                            selectedComplexity[activity.complexity])
+                    );
+                });
+            }
+            
+            // If no eligible activities, show message
+            if (eligibleActivities.length === 0) {
+                resultContainer.innerHTML = '<p>No activities match your current filters</p>';
+                return;
+            }
+            
+            // Get a random activity
+            const randomIndex = Math.floor(Math.random() * eligibleActivities.length);
+            displayActivity(eligibleActivities[randomIndex]);
+        }
+        
+        // Event listeners
+        randomBtn.addEventListener('click', () => getRandomActivity());
+        
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const category = button.dataset.category;
+                getRandomActivity(category);
+            });
+        });
+    </script>
+</body>
+</html>
